@@ -20,8 +20,8 @@ public class WarehouseController : ControllerBase
         return await _warehouseRepository.AddProduct(productWarehouse);
     }
 
-    [HttpPost("AddProductWithStoredProcedure")]
-    public async Task<IActionResult> AddProductWithStoredProcedure([FromBody] ProductDetails productDetails)
+    [HttpGet("AddProductWithDetails")]
+    public async Task<IActionResult> AddProductWithDetails([FromQuery] ProductDetails productDetails)
     {
         try
         {
