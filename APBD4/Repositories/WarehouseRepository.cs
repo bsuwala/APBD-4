@@ -1,11 +1,11 @@
+namespace WarehouseApp;
+
 public class WarehouseRepository : IWarehouseRepository
 {
     private string connectionString = "Server=xxxxx;Database=xxxx;User Id=xxxx;Password=xxxx;";
 
-    public async Task<IEnumerable<ProductWarehouse>> AddProduct(ProductWarehouse productWarehouse)
+    public async Task AddProduct(ProductWarehouse productWarehouse)
     {
-        var products = new List<ProductWarehouse>();
-
         using (SqlConnection connection = new SqlConnection(connectionString))
         {
             await connection.OpenAsync();
@@ -20,21 +20,35 @@ public class WarehouseRepository : IWarehouseRepository
                 command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
                 command.Parameters.AddWithValue("@Price", productWarehouse.Price * productWarehouse.Amount);
 
-                var id = await command.ExecuteScalarAsync();
+                await command.ExecuteScalarAsync();
 
                 transaction.Commit();
-
-                products.Add(new ProductWarehouse
-                {
-                    IdProduct = productWarehouse.IdProduct,
-                    IdWarehouse = productWarehouse.IdWarehouse,
-                    Amount = productWarehouse.Amount,
-                    CreatedAt = DateTime.Now,
-                    Price = productWarehouse.Price * productWarehouse.Amount
-                });
             }
         }
+    }
 
-        return products;
+    public async Task AddProductWithStoredProcedure(ProductWarehouse productWarehouse)
+    {
+        using (SqlConnection connection = new SqlConnection(connectionString))
+        {
+            await connection.OpenAsync();
+
+            using (SqlTransaction transaction = connection.BeginTransaction())
+            {
+                SqlCommand command = new SqlCommand("AddProductToWarehouse", connection);
+                command.CommandType = CommandType.StoredProcedure;
+                command.Transaction = transaction;
+
+                command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
+                command.Parameters.AddWithValue("@IdWarehouse", productWarehouse.IdWarehouse);
+                command.Parameters.AddWithValue("@Amount", productWarehouse.Amount);
+                command.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+                command.Parameters.AddWithValue("@Price", productWarehouse.Price * productWarehouse.Amount);
+
+                await command.ExecuteScalarAsync();
+
+                transaction.Commit();
+            }
+        }
     }
 }

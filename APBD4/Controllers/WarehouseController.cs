@@ -1,7 +1,4 @@
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+namespace WarehouseApp;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -15,13 +12,14 @@ public class WarehouseController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IEnumerable<ProductWarehouse>> Post([FromBody] ProductWarehouse productWarehouse)
+    public async Task<IActionResult> Post([FromBody] ProductWarehouse productWarehouse)
     {
-        return await _warehouseRepository.AddProduct(productWarehouse);
+        await _warehouseRepository.AddProduct(productWarehouse);
+        return NoContent();
     }
 
-    [HttpGet("AddProductWithDetails")]
-    public async Task<IActionResult> AddProductWithDetails([FromQuery] ProductDetails productDetails)
+    [HttpGet("AddProductWithStoredProcedure")]
+    public async Task<IActionResult> AddProductWithStoredProcedure([FromQuery] ProductDetails productDetails)
     {
         try
         {

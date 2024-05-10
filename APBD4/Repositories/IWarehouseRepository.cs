@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.Threading.Tasks;
+namespace WarehouseApp;
 
 public interface IWarehouseRepository
 {
-    Task<IEnumerable<ProductWarehouse>> AddProduct(ProductWarehouse productWarehouse);
+    Task AddProduct(ProductWarehouse productWarehouse);
+    Task AddProductWithStoredProcedure(ProductWarehouse productWarehouse);
 }
