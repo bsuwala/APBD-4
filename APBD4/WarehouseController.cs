@@ -10,7 +10,7 @@ namespace WarehouseApp.Controllers
     [ApiController]
     public class WarehouseController : ControllerBase
     {
-        private string connectionString = "Server=db-mssql16.pjwstk.edu.pl;Database=sxxxxx;User Id=sxxxxx;Password=1234;";
+        private string connectionString = "Server=xxxxx;Database=xxxx;User Id=xxxx;Password=xxxx;";
         
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ProductWarehouse productWarehouse)
